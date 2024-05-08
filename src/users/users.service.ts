@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Role } from 'src/roles/entities/role.entity';
+import { hash } from "bcrypt"
 
 @Injectable()
 export class UsersService {
@@ -60,6 +61,8 @@ export class UsersService {
 
   async update(id: number, user: UpdateUserDto) {
 
+    console.log(user);
+
 
     const oldUser = await this.usersRepository.findOne({
       where: {
@@ -82,6 +85,11 @@ export class UsersService {
     }
 
     oldUser.roles = [rol]
+
+    if (oldUser.password !== user.password) {
+      const encryPassword = await hash(user.password, Number(process.env.HASH_SALT))
+      user.password = encryPassword
+    }
 
     const updateUser = Object.assign(oldUser, user)
 
@@ -113,6 +121,11 @@ export class UsersService {
     user.photo = file.filename
 
     oldUser.roles = [rol]
+
+    if (oldUser.password !== user.password) {
+      const encryPassword = await hash(user.password, Number(process.env.HASH_SALT))
+      user.password = encryPassword
+    }
 
     const updateUser = Object.assign(oldUser, user)
 
