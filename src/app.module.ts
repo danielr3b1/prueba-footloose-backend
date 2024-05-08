@@ -19,8 +19,8 @@ import { MailsModule } from './mails/mails.module';
   imports: [
     TypeOrmModule.forRoot({
       type: "mysql",
-      host: "localhost",
-      port: 3306,
+      host: "0.tcp.sa.ngrok.io",
+      port: 12614,
       username: "root",
       password: "",
       database: "footloose_db",
